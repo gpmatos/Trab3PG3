@@ -24,7 +24,9 @@ public class MusicDB {
     HashMap<String,Album> albumMap = new HashMap();
     HashMap<String, HashMap<Integer,Song>> genresMap = new HashMap();
     //HashMap<String, Set<Song>> genresMap = new HashMap(); ??
-    // criar função generica para fazer os adds
+
+
+    // TODO criar função generica para fazer os adds
     // usar o computeifabsent em vez do putifabsent
 
     public Song addSong(Song song) {
@@ -67,7 +69,7 @@ public class MusicDB {
         int upperbound = genrehash.size();//generate random values from 0-HashMap size
         int int_random = rand.nextInt(upperbound);
         Song s = genrehash.get(int_random);
-        if(((playDur + (s.getDuration())) < maxDuration)) {// comparar Playlist.duration para ver se é possivel
+        if(((playDur + (s.getDuration())) < maxDuration)) {// comparar Playlist.duration para ver se é possivel adicionar
             return s;
         }
         else {// outra tentativa de inserção
@@ -92,22 +94,22 @@ public class MusicDB {
         long playDur =0;
         int resto =0;
 
-        if((resto= (genres.length-totalSongs ))< 0){
+        if((resto= (genres.length-totalSongs ))< 0){ // Se o Nº Songs < Nº Generos requisitada
             for(int i =0 ; i<totalSongs ; i++){
-                HashMap<Integer,Song> genrehash =genresMap.get(genRandomInt(genres));
-                playlist.addSong(genRandomSong(genrehash,playDur,maxDuration));
+                HashMap<Integer,Song> genrehash =genresMap.get(genRandomInt(genres)); // Buscar o genero aleatorio
+                playlist.addSong(genRandomSong(genrehash,playDur,maxDuration)); // adicionar à playlist
             }
             return playlist;
         }
 
-        if(resto== 0){
+        if(resto== 0){ // Nº Songs == Nº Generos
           for(String g : genres){
               HashMap<Integer,Song> genrehash =genresMap.get(g);
               playlist.addSong(genRandomSong(genrehash,playDur,maxDuration));
           }
           return playlist;
         }
-        else{
+        else{  // Nº Songs == Nº Generos
             for(int i =0 ; i<resto ; i++){
                 HashMap<Integer,Song> genrehash =genresMap.get(genRandomInt(genres));
                 playlist.addSong(genRandomSong(genrehash,playDur,maxDuration));
