@@ -1,5 +1,6 @@
 package isel.pg3.music.model;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 
@@ -22,26 +23,41 @@ public class MusicDB {
 
     HashMap<String,Song> songMap = new HashMap();
     HashMap<String,Album> albumMap = new HashMap();
-    HashMap<String, HashMap<Integer,Song>> genresMap = new HashMap();
-    //HashMap<String, Set<Song>> genresMap = new HashMap(); ??
+    HashMap<String,Playlist> playListMap = new HashMap();
+    HashMap<String, Set<Song>> genresMap = new HashMap();// <Genero, Coleção de songs do género>
+    HashMap<String, Set<Song>> artistMap = new HashMap();// <Artista, Coleção de songs do artista>
 
-
+//-----------
+            /*if ((genreType =genresMap.get(song.getGenre())) == null) { // Criação de novo género ( duplicado )
+        Set<Song> s = new HashSet();
+        s.add(song);
+        genresMap.put(song.getGenre(), s);
+    }
+        else {
+        genreType.add(song);
+    }*/
     // TODO criar função generica para fazer os adds
     // usar o computeifabsent em vez do putifabsent
 
     public Song addSong(Song song) {
-        songMap.put(song.getTitle(), song);
-        //if (genresMap.get(song.getGenre()) == null){
-        //Set<Song> s = new HashSet<>();
-        HashMap<Integer, Song> s = new HashSet<>();
-       // s.add(song);
-        genresMap.putIfAbsent(song.getGenre(),s); //V putIfAbsent(K key, V value)
-        //genresMap.put(song.getGenre(),s);
-        //s= genresMap.get(song.getGenre() );
-        s.add(song);
-        genresMap.put(song.getGenre(),s);
-
+        songMap.putIfAbsent(song.getTitle(), song); // Introduzir Song hashmap songMap
+        String genre = song.getGenre();
+        String artist = song.getArtist();
+        addToSet(genresMap, song, genre);
+        addToSet(artistMap, song, artist);
         return song;
+    }
+    private void addToSet(HashMap<String, Set<Song>> HashMap, Song song, String string){
+
+        if ((HashMap.get(string)) ==  null) {
+            Set<Song> setSong = new HashSet<>();
+            setSong.add(song);              // Criação de novo género
+            HashMap.put(string, setSong);
+        }
+        else {
+            HashMap.get(string).add(song);  // Adição ao set pré existente
+        }
+
     }
 
     public Album addAlbum(Album album) {
@@ -64,87 +80,81 @@ public class MusicDB {
         return items;
     }
 
-    private Song genRandomSong(HashMap<Integer,Song> genrehash , long playDur, long maxDuration){
-        Random rand = new Random(); //instance of random class
-        int upperbound = genrehash.size();//generate random values from 0-HashMap size
-        int int_random = rand.nextInt(upperbound);
-        Song s = genrehash.get(int_random);
-        if(((playDur + (s.getDuration())) < maxDuration)) {// comparar Playlist.duration para ver se é possivel adicionar
-            return s;
-        }
-        else {// outra tentativa de inserção
-            s = genrehash.get(int_random);
-            if (((playDur + (s.getDuration())) < maxDuration)) {// comparar Playlistduration para ver se é possivel adicionar
+    //  ----------------------Criação de PlayList---------------------------------------------------
+    private Song genRandomSong(ArrayList<Song> aListSong, long playDur, long maxDuration) {
+
+        //Song s = null;
+        for(Song s: aListSong) {
+            //s = (Song) o;
+            if (((playDur + (s.getDuration())) < maxDuration)) {// comparar Playlist.duration para ver se é possivel adicionar
                 return s;
             }
-            else return null;
+            else {  // outra tentativa de inserção
+                aListSong.remove(s);
+                break;
+            }
         }
-    }
-
-    private Integer genRandomInt(String[] genres) {
-        int min = 0;
-        int max = genres.length;
-        //Generate random int value from 0 to genres.length
-        return (int) Math.floor(Math.random() * (max - min + 1) + min);
-
+        return null;//Song não cabe na playlist
     }
 
     public Playlist addRandomPlayList(String name, String[] genres, int totalSongs, long maxDuration) {
         Playlist playlist = new Playlist(name);
-        long playDur =0;
-        int resto =0;
-
-        if((resto= (genres.length-totalSongs ))< 0){ // Se o Nº Songs < Nº Generos requisitada
-            for(int i =0 ; i<totalSongs ; i++){
-                HashMap<Integer,Song> genrehash =genresMap.get(genRandomInt(genres)); // Buscar o genero aleatorio
-                playlist.addSong(genRandomSong(genrehash,playDur,maxDuration)); // adicionar à playlist
-            }
+        long playDur =0; // Duração da Playlist
+        ArrayList<Song> aListSong= new ArrayList<>();
+        if(totalSongs < 1 || maxDuration < 1){
             return playlist;
         }
 
-        if(resto== 0){ // Nº Songs == Nº Generos
-          for(String g : genres){
-              HashMap<Integer,Song> genrehash =genresMap.get(g);
-              playlist.addSong(genRandomSong(genrehash,playDur,maxDuration));
-          }
-          return playlist;
-        }
-        else{  // Nº Songs == Nº Generos
-            for(int i =0 ; i<resto ; i++){
-                HashMap<Integer,Song> genrehash =genresMap.get(genRandomInt(genres));
-                playlist.addSong(genRandomSong(genrehash,playDur,maxDuration));
-            }
-            return playlist;
 
-       }
+        for(int i =0 ; i<genres.length ; i++){// Tirar todos as songs dos géneros para um array
+              Set<Song> a = genresMap.get(genres[i]);
+              aListSong.addAll(a);
+        }
+        // Array aleatório
+
+        for(int i=0; i<totalSongs ; i++) {
+            Collections.shuffle(aListSong);
+            playlist.addSong(genRandomSong(aListSong, playDur, maxDuration)); // adicionar à playlist uma song que cabe na playlist em função do max dur
+        }
+        playListMap.putIfAbsent(playlist.getTitle(),playlist);// Adicionar ao hashmap de playlist
+        return playlist;
     }
+
+    //---------------------------------------------------
 
     /**
      * Methods to get the song, album or playlist with given title
      */
-    public Song getSong(String t)        { return null; }
-    public Album getAlbum(String t)      { return null; }
-    public Playlist getPlaylist(String t){ return null; }
+    public Song getSong(String t)        { return songMap.get(t);    }
+    public Album getAlbum(String t)      { return albumMap.get(t); }
+    public Playlist getPlaylist(String t){ return playListMap.get(t); }
 
     /**
      * Methods to get all songs, albums, playlists, artists and genres.
      */
-    public Iterable<Song> getSongs()         { return null;  }
-    public Iterable<Album> getAlbums()       { return null;  }
-    public Iterable<Playlist> getPlaylists() { return null;  }
-    public Iterable<String> getArtists()     { return null;  }
-    public Iterable<String> getGenres()      { return null;  }
+    public Iterable<Song> getSongs()         { return songMap.values();  }
+    public Iterable<Album> getAlbums()       { return albumMap.values();  }
+    public Iterable<Playlist> getPlaylists() { return playListMap.values();  }
+    public Iterable<String> getArtists()     { return artistMap.keySet();  }
+    public Iterable<String> getGenres()      { return genresMap.keySet();  }
 
     /**
      * Method to get the songs of the specified artist.
      */
     public Iterable<Song> getSongs(String artist) {
-        return null;
+        return artistMap.get(artist);
     }
 
     /**
      * Method for getting songs that have at least one of the specified genres.
      */
-    public Iterable<Song> getSongs(String ... genres) { return null;  }
+    public Iterable<Song> getSongs(String ... genres) {
+        ArrayList<Song> allSongGenre = new ArrayList<>();
+        for(String s: genres){
+            allSongGenre.addAll(genresMap.get(s));
+        }
+        return allSongGenre;
+    }
+
 
 }

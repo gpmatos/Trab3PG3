@@ -11,28 +11,28 @@ import java.util.*;
 public class MusicItemFinder {
     // all official mp3 genres
     private static String[] genres = {
-        "Blues", "Classic Rock","Country", "Dance", "Disco", "Funk", "Grunge", "Hip-Hop",
-        "Jazz", "Metal", "New Age", "Oldies", "Other", "Pop", "R&B", "Rap","Reggae",
-        "Rock", "Techno", "Industrial", "Alternative", "Ska", "Death Metal", "Pranks",
-        "Soundtrack","Euro-Techno", "Ambient", "Trip-Hop", "Vocal", "Jazz+Funk", "Fusion",
-        "Trance", "Classical", "Instrumental", "Acid", "House", "Game", "Sound Clip",
-        "Gospel", "Noise", "Alternative Rock", "Bass", "Soul", "Punk", "Space", "Meditative",
-        "Instrumental Pop", "Instrumental Rock","Ethnic", "Gothic", "Darkwave",
-        "Techno-Industrial", "Electronic","Pop-Folk", "Eurodance","Dream", "Southern Rock",
-        "Comedy", "Cult", "Gangsta", "Top 40", "Christian Rap","Pop/Funk", "Jungle",
-        "Native US", "Cabaret", "New Wave", "Psychadelic", "Rave", "Showtunes", "Trailer",
-        "Lo-Fi", "Tribal", "Acid Punk", "Acid Jazz", "Polka", "Retro", "Musical",
-        "Rock & Roll", "Hard Rock", "Folk", "Folk-Rock", "National Folk", "Swing",
-        "Fast Fusion", "Bebob", "Latin", "Revival", "Celtic", "Bluegrass", "Avantgarde",
-        "Gothic Rock", "Progressive Rock", "Psychedelic Rock", "Symphonic Rock", "Slow Rock",
-        "Big Band", "Chorus", "Easy Listening", "Acoustic", "Humour", "Speech", "Chanson",
-        "Opera", "Chamber Music", "Sonata", "Symphony", "Booty Bass", "Primus", "Porn Groove",
-        "Satire", "Slow Jam", "Club", "Tango", "Samba", "Folklore", "Ballad", "Power Ballad",
-        "Rhytmic Soul", "Freestyle", "Duet", "Punk Rock", "Drum Solo",  "Acapella",
-        "Dance Hall", "Goa", "Drum & Bass", "Club-House", "Hardcore", "Terror", "Indie",
-        "BritPop", "Negerpunk", "Polsk Punk", "Beat", "Christian Gangsta", "Heavy Metal",
-        "Black Metal", "Crossover", "Contemporary C", "Christian Rock", "Merengue", "Salsa",
-        "Thrash Metal", "Anime", "JPop", "SynthPop",
+            "Blues", "Classic Rock","Country", "Dance", "Disco", "Funk", "Grunge", "Hip-Hop",
+            "Jazz", "Metal", "New Age", "Oldies", "Other", "Pop", "R&B", "Rap","Reggae",
+            "Rock", "Techno", "Industrial", "Alternative", "Ska", "Death Metal", "Pranks",
+            "Soundtrack","Euro-Techno", "Ambient", "Trip-Hop", "Vocal", "Jazz+Funk", "Fusion",
+            "Trance", "Classical", "Instrumental", "Acid", "House", "Game", "Sound Clip",
+            "Gospel", "Noise", "Alternative Rock", "Bass", "Soul", "Punk", "Space", "Meditative",
+            "Instrumental Pop", "Instrumental Rock","Ethnic", "Gothic", "Darkwave",
+            "Techno-Industrial", "Electronic","Pop-Folk", "Eurodance","Dream", "Southern Rock",
+            "Comedy", "Cult", "Gangsta", "Top 40", "Christian Rap","Pop/Funk", "Jungle",
+            "Native US", "Cabaret", "New Wave", "Psychadelic", "Rave", "Showtunes", "Trailer",
+            "Lo-Fi", "Tribal", "Acid Punk", "Acid Jazz", "Polka", "Retro", "Musical",
+            "Rock & Roll", "Hard Rock", "Folk", "Folk-Rock", "National Folk", "Swing",
+            "Fast Fusion", "Bebob", "Latin", "Revival", "Celtic", "Bluegrass", "Avantgarde",
+            "Gothic Rock", "Progressive Rock", "Psychedelic Rock", "Symphonic Rock", "Slow Rock",
+            "Big Band", "Chorus", "Easy Listening", "Acoustic", "Humour", "Speech", "Chanson",
+            "Opera", "Chamber Music", "Sonata", "Symphony", "Booty Bass", "Primus", "Porn Groove",
+            "Satire", "Slow Jam", "Club", "Tango", "Samba", "Folklore", "Ballad", "Power Ballad",
+            "Rhytmic Soul", "Freestyle", "Duet", "Punk Rock", "Drum Solo",  "Acapella",
+            "Dance Hall", "Goa", "Drum & Bass", "Club-House", "Hardcore", "Terror", "Indie",
+            "BritPop", "Negerpunk", "Polsk Punk", "Beat", "Christian Gangsta", "Heavy Metal",
+            "Black Metal", "Crossover", "Contemporary C", "Christian Rock", "Merengue", "Salsa",
+            "Thrash Metal", "Anime", "JPop", "SynthPop",
     };
 
     public static String getGenre(int genreId) {
@@ -40,7 +40,7 @@ public class MusicItemFinder {
     }
 
     public static boolean isAlbum(File folder) {
-       return folder.isDirectory()&& getSubFolders(folder).length == 0 && getMusicFiles(folder).length > 0;
+        return folder.isDirectory()&& getSubFolders(folder).length == 0 && getMusicFiles(folder).length > 0;
     }
 
     public static boolean isMusicFile(File f) {
@@ -77,16 +77,16 @@ public class MusicItemFinder {
 
     public static Song getSong(File filename) {
         if (!isMusicFile(filename)) {
-             throw new MusicDbException(filename.getName() + " not is song file!");
+            throw new MusicDbException(filename.getName() + " not is song file!");
         }
         return buildSong( filename, "" );
-   }
-   private static Song buildSong(File filename, String dirName) {
-         try {
+    }
+    private static Song buildSong(File filename, String dirName) {
+        try {
             Mp3File mp3file = new Mp3File(filename.getAbsolutePath());
             String title = "";
-            String artist = "";
-            String genre = "unknown";
+            String artist = "Unkown";
+            String genre = "Unknown";
             String album= dirName;
             int duration = (int) mp3file.getLengthInSeconds();
             if ( mp3file.hasId3v1Tag() ) {
