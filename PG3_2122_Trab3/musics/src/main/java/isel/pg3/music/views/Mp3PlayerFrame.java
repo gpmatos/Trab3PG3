@@ -97,20 +97,16 @@ public class Mp3PlayerFrame extends JFrame {
 
 
 
-    JMenuBar miG = new JMenuBar(); // Criação da janela que abre com o Botão Genre
+   private JMenuBar miG = new JMenuBar(); // Criação da janela que abre com o Botão Genre
     private  JMenuBar[] inputsGenre = {
             new JMenuBar(), miG
     };
 
-    public void buildGenreSelector(){
+    private void buildGenreSelector(){ // Menu para escolha dos generos em playlist
         miG.add(menuGeneros4PlayList);
-        // Graphics g =;
-       // g.setColor(Color.BLACK);
-        //miG.paint(g);
     }
     private int getInputsGenre(String title ) {
         buildGenreSelector();
-
         return JOptionPane.showConfirmDialog(this,inputsGenre ,
                 title, JOptionPane.PLAIN_MESSAGE);
     }; // -------------------------------------------------------------------------------
@@ -327,9 +323,9 @@ public class Mp3PlayerFrame extends JFrame {
     // ---------------------------- Menu ------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------
 
-    private void buildGenresTab(MenuItemCheckList mi){
+    private void buildGenresTab(MenuItemCheckList mi){ //Menu de checklist dos generos
         try {
-            //musicDB.getGenres();
+
             Iterator<String> genreIt = musicDB.getGenres().iterator();
 
             while (genreIt.hasNext()) {
@@ -342,22 +338,21 @@ public class Mp3PlayerFrame extends JFrame {
 
     }
 
-    String[] array = null; // trocar nome
+    String[] arraydosGeneros = null; // Array para guardar generos selecinaodos
     private void arrayChoosegeneros() {
 
-        array = menuGeneros4PlayList.getSelected();
+        arraydosGeneros = menuGeneros4PlayList.getSelected();
 
 
     }
     private void buildGenresTabforPlayList(MenuItemCheckList mi){
         try {
-            //musicDB.getGenres();
+
             Iterator<String> genreIt = musicDB.getGenres().iterator();
 
             while (genreIt.hasNext()) {
 
                menuGeneros4PlayList.addItem(genreIt.next(),a ->arrayChoosegeneros() );
-
 
             }
         } catch (Exception ex ) {
@@ -369,10 +364,10 @@ public class Mp3PlayerFrame extends JFrame {
         getInputsPlaylist("Playlist");
         musicDB.addRandomPlayList(playlistName.getText(),menuGeneros4PlayList.getSelected(),Integer.parseInt(playlistNsongs.getText()) ,(long) Integer.parseInt(playlistDuration.getText()));
         menuGeneros4PlayList.removeAll();
-        //b.removeActionListener();
+
 
     }
-    private void newWindowGenres(ActionEvent e){// Janela de Adição de Genero
+    private void newWindowGenres(ActionEvent e){// Janela de Adição de Genero na janela playlist
 
         getInputsGenre("Choose Genre");
 
@@ -382,7 +377,7 @@ public class Mp3PlayerFrame extends JFrame {
         //------------------Nova Tab Genres-----------------------
 
 
-        b.addActionListener(this::newWindowGenres); // Adição de ação ao botão
+        b.addActionListener(this::newWindowGenres); // Adição de ação ao botão género na playlist
 
     //------------------Nova Tab Add-----------------------
         JMenu menuAdd = new JMenu("Add");

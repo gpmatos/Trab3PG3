@@ -8,9 +8,6 @@ import java.util.*;
  * TODO ...
  */
 public class MusicDB {
-    // Date
-
-    // TODO - not is completed
 
     public MusicDB() {
 
@@ -27,17 +24,7 @@ public class MusicDB {
     HashMap<String, Set<Song>> genresMap = new HashMap();// <Genero, Coleção de songs do género>
     HashMap<String, Set<Song>> artistMap = new HashMap();// <Artista, Coleção de songs do artista>
 
-//-----------
-            /*if ((genreType =genresMap.get(song.getGenre())) == null) { // Criação de novo género ( duplicado )
-        Set<Song> s = new HashSet();
-        s.add(song);
-        genresMap.put(song.getGenre(), s);
-    }
-        else {
-        genreType.add(song);
-    }*/
-    // TODO criar função generica para fazer os adds
-    // usar o computeifabsent em vez do putifabsent
+
 
     public Song addSong(Song song) {
         songMap.putIfAbsent(song.getTitle(), song); // Introduzir Song hashmap songMap
@@ -47,7 +34,7 @@ public class MusicDB {
         addToSet(artistMap, song, artist);
         return song;
     }
-    private void addToSet(HashMap<String, Set<Song>> HashMap, Song song, String string){
+    private void addToSet(HashMap<String, Set<Song>> HashMap, Song song, String string){ // Acrescenta nos mapas indicado as musicas
 
         if ((HashMap.get(string)) ==  null) {
             Set<Song> setSong = new HashSet<>();

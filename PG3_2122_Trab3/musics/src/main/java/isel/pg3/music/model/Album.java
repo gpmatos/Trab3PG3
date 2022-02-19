@@ -24,7 +24,7 @@ public class Album  extends MusicItemExtended {
         this.path = path;
         this.songs=songs;
 
-        // TODO
+
     }
 
     @Override
